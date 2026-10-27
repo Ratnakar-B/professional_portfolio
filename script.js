@@ -41,11 +41,9 @@ if ("IntersectionObserver" in window) {
   sections.forEach((section) => sectionObserver.observe(section));
 
   const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
+    (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
     },
     { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
@@ -65,6 +63,7 @@ if ("IntersectionObserver" in window) {
     ".recognition-note",
     ".work-heading > *",
     ".project-feature",
+    ".ai-platform-visual",
     ".project-card",
     ".professional-project-card",
     ".work-note",
@@ -92,6 +91,41 @@ if ("IntersectionObserver" in window) {
 
 const year = document.querySelector("#current-year");
 if (year) year.textContent = String(new Date().getFullYear());
+
+const starfield = document.querySelector(".starfield");
+if (starfield) {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  for (let index = 0; index < 26; index += 1) {
+    const star = document.createElement("span");
+    const duration = 11 + ((index * 7) % 10);
+    const progress = ((index * 29) % 100) / 100;
+
+    star.className = "falling-star";
+    star.style.setProperty("--star-x", `${((index * 43 + 11) % 97) + 1}%`);
+    star.style.setProperty("--star-y", `${(index * 47) % 96}%`);
+    star.style.setProperty("--star-size", index % 6 === 0 ? "2px" : "1.5px");
+    star.style.setProperty("--star-drift", `${((index * 31) % 121) - 60}px`);
+    star.style.setProperty("--fall-duration", `${duration}s`);
+    star.style.setProperty("--fall-delay", `-${duration * progress}s`);
+    starfield.append(star);
+  }
+
+  if (!reducedMotion.matches) {
+    let frame = 0;
+    const updateStarfieldParallax = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        const offset = Math.max(-120, -window.scrollY * 0.035);
+        starfield.style.setProperty("--scroll-parallax", `${offset}px`);
+        frame = 0;
+      });
+    };
+
+    window.addEventListener("scroll", updateStarfieldParallax, { passive: true });
+    updateStarfieldParallax();
+  }
+}
 
 const backToTop = document.querySelector(".back-to-top");
 if (backToTop) {
