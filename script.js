@@ -54,6 +54,7 @@ if ("IntersectionObserver" in window) {
     ".hero-visual",
     ".hero-index",
     ".tech-strip-inner > span",
+    ".section-topline > *",
     ".section-heading",
     ".about-body",
     ".expertise-intro > *",
@@ -67,9 +68,12 @@ if ("IntersectionObserver" in window) {
     ".project-card",
     ".professional-project-card",
     ".work-note",
+    ".skills-heading > *",
     ".skill-group",
     ".contact-main > *",
     ".contact-details > *",
+    ".footer-main > *",
+    ".footer-bottom",
   ];
 
   revealGroups.forEach((selector) => {
